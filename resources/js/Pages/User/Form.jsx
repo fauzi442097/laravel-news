@@ -46,10 +46,8 @@ const ModalForm = ({ errors, data, handleCloseModal, handleStore, handleChange }
                         </div>
 
                         <div className="flex items-center justify-end mt-4">
-
-                            <Button className="ml-4 bg-blue-400 hover:bg-blue-500">
-                                Simpan
-                            </Button>
+                            <button
+                                className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-white text-sm"> Simpan </button>
                         </div>
                     </form>
                 </div>

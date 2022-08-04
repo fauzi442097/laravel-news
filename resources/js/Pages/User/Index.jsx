@@ -5,6 +5,7 @@ import List from "@/Pages/User/Lists";
 import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import Button from '@/Components/Button';
+import AlertModal from '@/Components/AlertModal';
 import ModalForm from "./Form";
 
 export default (props) => {
@@ -14,6 +15,8 @@ export default (props) => {
         name: '',
         email: '',
     });
+
+    const [showModalAlert, setShowModalAlert] = useState(false);
 
     const showModal = async (user_id) => {
         try {
@@ -92,6 +95,14 @@ export default (props) => {
         setError({ ...error });
     }
 
+    const setActive = (user_id) => {
+        alert(user_id);
+    }
+
+    const showAlertModal = (user_id) => {
+        setShowModalAlert(true);
+    }
+
     return (
         <Authenticated
             auth={props.auth}
@@ -107,20 +118,32 @@ export default (props) => {
                 handleChange={onHandleChange}
              />
 
+             {
+                showModalAlert &&
+                <AlertModal
+                    showAlert={true}
+                    title={"Non aktif user"}
+                    body={"Anda yakin akan mengubah status user ini menjadi non aktif?"}
+                    buttonName={"Non Aktif"}
+                    handleAction={() => setActive(user_id)}/>
+            }
+
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="flex justify-between flex-wrap border-b border-gray-200">
-                            <div className="p-6 bg-white text-lg bold">Users List</div>
-                            <div className="p-6">
+                    <div className="bg-white overflow-hidden m:rounded-lg">
+                        <div className="flex justify-between flex-wrap  border-gray-200">
+                            <div className="px-6 bg-white text-lg bold">Users List</div>
+                            <div className="px-6">
                                 <button
-                                    className="py-2 px-4 bg-blue-500 hover:bg-blue-700 rounded text-white text-sm"
+                                    className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-white text-sm"
                                     onClick={() => showModal()}> Tambah </button>
                             </div>
                         </div>
 
-                        <div className="p-6">
-                            <List users={props.users} handleShowModal={showModal} />
+                        <div className="px-6 mt-6 pb-6">
+                            <List users={props.users}
+                                handleShowModal={showModal}
+                                handleShowAlert={showAlertModal} />
                         </div>
                     </div>
                 </div>

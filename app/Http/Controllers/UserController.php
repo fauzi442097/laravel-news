@@ -46,7 +46,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make('welcome1'),
-            'role_id' => 2,
+            'role_id' => 2, // Role
         ]);
         return redirect()->route('users');
     }
