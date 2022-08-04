@@ -17,6 +17,10 @@ export default (props) => {
     });
 
     const [showModalAlert, setShowModalAlert] = useState(false);
+    const [titleAlert, setTitleAlert] = useState("");
+    const [bodyAlert, setBodyAlert] = useState("");
+    const [buttonAlertName, setButtonAlertName] = useState("");
+    const [userIdSelected, setUserIdSelected] = useState("");
 
     const showModal = async (user_id) => {
         try {
@@ -96,12 +100,24 @@ export default (props) => {
     }
 
     const setActive = (user_id) => {
-        alert(user_id);
+        let url = route('users.setActive', {id: user_id});
+        get(url);
     }
 
-    const showAlertModal = (user_id) => {
+    const showAlertModal = (user_id, is_active) => {
+        if ( is_active ) {
+            setTitleAlert("Non aktif user");
+            setBodyAlert("Anda yakin akan mengubah status user ini menjadi non aktif?");
+            setButtonAlertName("Non Aktif");
+        } else {
+            setTitleAlert("Aktif user");
+            setBodyAlert("Anda yakin akan mengubah status user ini menjadi aktif kembali?");
+            setButtonAlertName("Aktif");
+        }
         setShowModalAlert(true);
+        setUserIdSelected(user_id);
     }
+
 
     return (
         <Authenticated
@@ -122,10 +138,12 @@ export default (props) => {
                 showModalAlert &&
                 <AlertModal
                     showAlert={true}
-                    title={"Non aktif user"}
-                    body={"Anda yakin akan mengubah status user ini menjadi non aktif?"}
-                    buttonName={"Non Aktif"}
-                    handleAction={() => setActive(user_id)}/>
+                    id={userIdSelected}
+                    setShowAlert={setShowModalAlert}
+                    title={titleAlert}
+                    body={bodyAlert}
+                    buttonName={buttonAlertName}
+                    handleAction={setActive}/>
             }
 
             <div className="py-12">

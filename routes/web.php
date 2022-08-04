@@ -26,18 +26,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::group(['middleware' => ['auth', 'verified']], function() {
-    Route::get('/dashboard', function() {
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
     // Route Group with Controller
-    Route::controller(UserController::class)->group(function() {
+    Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
         Route::get('/users/{user}', 'show')->name('users.show', ['user' => 'user']);
+        Route::get('/users/{user}/setActive', 'setActive')->name('users.setActive', ['user' => 'user']);
         Route::post('/users', 'store')->name('users.store');
         Route::put('/users/{user}', 'update')->name('users.update', ['user' => 'user']);
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

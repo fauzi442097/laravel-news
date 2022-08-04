@@ -28,7 +28,7 @@ const List = ({ users, handleShowModal, handleShowAlert }) => {
                                         <td className="border-b border-gray-100">{value.role.name}</td>
                                         <td className="border-b border-gray-100 text-center">
                                             {
-                                                index % 2 == 1 ?  (<span className="text-xs bg-indigo-500 py-1 px-6 text-white rounded-full"> Aktif </span>)
+                                                value.is_active ?  (<span className="text-xs bg-indigo-500 py-1 px-6 text-white rounded-full"> Aktif </span>)
                                                 : (<span className="text-xs bg-gray-400 py-1 px-3 text-white rounded-full"> Non Aktif </span>)
                                             }
 
@@ -41,7 +41,7 @@ const List = ({ users, handleShowModal, handleShowAlert }) => {
                                                     ? "py-2 px-4 border  bg-white hover:bg-gray-400 rounded-lg text-grey hover:text-white text-sm"
                                                     : "py-2 px-4 border border-gray-400 bg-gray-400 hover:bg-gray-500 rounded-lg text-white text-sm"
                                                 }
-                                                onClick={() => handleShowAlert(value.id)}> {value.is_active ? 'Non Aktif' : 'Aktif'} </button>
+                                                onClick={() => handleShowAlert(value.id, value.is_active)}> {value.is_active ? 'Non Aktif' : 'Aktif'} </button>
                                         </td>
                                     </tr>
                                 )

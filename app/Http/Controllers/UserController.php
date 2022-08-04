@@ -101,4 +101,11 @@ class UserController extends Controller
     {
         //
     }
+
+    public function setActive(User $user)
+    {
+        $user->is_active = !$user->is_active;
+        $user->save();
+        return redirect()->route('users');
+    }
 }

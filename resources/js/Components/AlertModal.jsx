@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react"
 
-const AlertModal = ({showAlert, title, body, handleAction, buttonName}) => {
-
-    console.log(showAlert);
+const AlertModal = ({showAlert, setShowAlert, id, title, body, handleAction, buttonName}) => {
 
     const [show, setShow] = useState(showAlert);
 
     const closeModalAlert = () => {
-        document.getElementById("modal-alert").checked = false;
         setShow(false);
+        document.getElementById("modal-alert").checked = false;
+        setShowAlert(false);
     }
 
     useEffect(() => {
         if ( show ) {
             document.getElementById("modal-alert").checked = true;
         }
-    }, [show])
+    });
+
+    console.log(id);
 
 
     return (
@@ -39,7 +40,7 @@ const AlertModal = ({showAlert, title, body, handleAction, buttonName}) => {
                         </div>
                     </div>
                     <div className="bg-gray-200 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button onClick={handleAction} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">{buttonName}</button>
+                        <button onClick={() => handleAction(id)} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">{buttonName}</button>
                         <button onClick={closeModalAlert}  type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Batal</button>
                     </div>
                 </div>
