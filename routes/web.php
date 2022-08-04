@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/users', 'store')->name('users.store');
         Route::put('/users/{user}', 'update')->name('users.update', ['user' => 'user']);
     });
+
+    Route::controller(RoleController::class)->group(function() {
+        Route::get('/roles', 'index')->name('roles');
+        Route::post('/roles', 'store')->name('roles.store');
+        Route::put('/roles/{role}', 'update')->name('roles.update');
+        Route::get('/roles/{role}', 'show')->name('roles.show', ['role' => 'role']);
+    });
+
+
 });
 
 require __DIR__ . '/auth.php';

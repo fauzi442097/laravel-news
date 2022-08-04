@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import Authenticated from '@/Layouts/Authenticated';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
-import List from "@/Pages/User/Lists";
-import Input from '@/Components/Input';
-import Label from '@/Components/Label';
-import Button from '@/Components/Button';
+import List from "./List";
 import AlertModal from '@/Components/AlertModal';
 import ModalForm from "./Form";
 import axios from "axios";
@@ -14,10 +11,9 @@ export default (props) => {
     const { data, setData, get, errors, setError, clearErrors, reset, post, put } = useForm({
         id: '',
         name: '',
-        email: '',
     });
 
-    const [users, setUsers] = useState(props.users);
+    const [roles, setRoles] = useState(props.roles);
     const [showModalAlert, setShowModalAlert] = useState(false);
     const [titleAlert, setTitleAlert] = useState("");
     const [bodyAlert, setBodyAlert] = useState("");
@@ -33,22 +29,21 @@ export default (props) => {
         }
     }, [alertType]);
 
-    const showModal = async (user_id) => {
+    const showModal = async (role_id) => {
         try {
             document.getElementById("modal-form").checked = true;
-            document.getElementById("title-modal").innerText = "Tambah User";
+            document.getElementById("title-modal").innerText = "Tambah Role";
 
-            if (user_id) {
-                document.getElementById("title-modal").innerText = "Edit User";
-                let url = route('users.show', { 'id': user_id });
+            if (role_id) {
+                document.getElementById("title-modal").innerText = "Edit Role";
+                let url = route('roles.show', { 'id': role_id });
                 let response = await axios.get(url);
                 let data = response.data;
-                let user = data.user;
+                let role = data.role;
 
                 setData({
-                    id: user.id,
-                    name: user.name,
-                    email: user.email
+                    id: role.id,
+                    name: role.name,
                 });
             }
 
@@ -74,14 +69,14 @@ export default (props) => {
         }
 
         if (data.id) {
-            let url = route('users.update', {'id' : data.id});
+            let url = route('roles.update', {'id' : data.id});
             if (isValid) {
                 put(url, {
                     onSuccess: (response) => {
                         closeModal();
                         setAlertType("success");
                         setShowModalAlert(true);
-                        setUsers(response.props.users);
+                        setRoles(response.props.roles);
                     },
                     onError: (errors) => {
                         console.log('error');
@@ -91,14 +86,14 @@ export default (props) => {
                 })
             }
         } else {
-            let url = route('users.store');
+            let url = route('roles.store');
             if (isValid) {
                 post(url, {
                     onSuccess: (response) => {
                         closeModal();
                         setAlertType("success");
                         setShowModalAlert(true);
-                        setUsers(response.props.users);
+                        setRoles(response.props.roles);
                     },
                     onError: (errors) => {
                         console.log('error');
@@ -124,37 +119,6 @@ export default (props) => {
         }
         setError({ ...error });
     }
-
-    const setActive = async (user_id) => {
-        try {
-            let url = route('users.setActive', { id: user_id });
-            let response = await axios.get(url);
-            setShowModalAlert(true);
-            setAlertType("success");
-            setTitleAlert("Sukses");
-            setBodyAlert(response.data.message);
-            setUsers(response.data.users);
-        } catch (errors) {
-            console.log('error');
-            console.log(errors.error);
-        }
-    }
-
-    const showAlertModal = (user_id, is_active) => {
-        if ( is_active ) {
-            setTitleAlert("Non aktif user");
-            setBodyAlert("Anda yakin akan mengubah status user ini menjadi non aktif?");
-            setButtonAlertName("Non Aktif");
-        } else {
-            setTitleAlert("Aktif user");
-            setBodyAlert("Anda yakin akan mengubah status user ini menjadi aktif kembali?");
-            setButtonAlertName("Aktif");
-        }
-        setAlertType("confirm");
-        setShowModalAlert(true);
-        setUserIdSelected(user_id);
-    }
-
 
     return (
         <Authenticated
@@ -182,14 +146,14 @@ export default (props) => {
                     title={titleAlert}
                     body={bodyAlert}
                     buttonName={buttonAlertName}
-                    handleAction={setActive}/>
+                />
             }
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden m:rounded-lg">
                         <div className="flex justify-between flex-wrap  border-gray-200">
-                            <div className="px-6 bg-white text-lg bold">Users List</div>
+                            <div className="px-6 bg-white text-lg bold">Role List</div>
                             <div className="px-6">
                                 <button
                                     className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-white text-sm"
@@ -198,9 +162,9 @@ export default (props) => {
                         </div>
 
                         <div className="px-6 mt-6 pb-6">
-                            <List users={users}
+                            <List roles={roles}
                                 handleShowModal={showModal}
-                                handleShowAlert={showAlertModal} />
+                                />
                         </div>
 
                         <div>

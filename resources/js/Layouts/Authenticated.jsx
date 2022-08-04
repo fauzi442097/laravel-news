@@ -27,7 +27,7 @@ export default function Authenticated({ auth, header, children }) {
                                 <NavLink href={route('users')} active={route().current('users')}>
                                     User
                                 </NavLink>
-                                <NavLink href={route('dashboard')} active={route().current('roles')}>
+                                <NavLink href={route('roles')} active={route().current('roles')}>
                                     Role
                                 </NavLink>
                             </div>
@@ -102,6 +102,9 @@ export default function Authenticated({ auth, header, children }) {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('users')} active={route().current('users')}>
                             User
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('roles')} active={route().current('roles')}>
+                            Role
                         </ResponsiveNavLink>
                     </div>
 

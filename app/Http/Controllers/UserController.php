@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Hash;
+use DB;
 
 class UserController extends Controller
 {
@@ -42,13 +43,23 @@ class UserController extends Controller
     public function store(CreateUserRequest $request)
     {
         //
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make('welcome1'),
-            'role_id' => 2, // Role
-        ]);
-        return redirect()->route('users');
+        DB::beginTransaction();
+        try {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make('welcome1'),
+                'role_id' => 2, // Role Author
+                'is_active' => true
+            ]);
+            DB::commit();
+            return redirect()->route('users');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -85,10 +96,20 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         //
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
-        return redirect()->route('users');
+        DB::beginTransaction();
+        try {
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->save();
+            DB::commit();
+            return redirect()->route('users');
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            return redirect()->back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
+
     }
 
     /**
@@ -104,8 +125,24 @@ class UserController extends Controller
 
     public function setActive(User $user)
     {
-        $user->is_active = !$user->is_active;
-        $user->save();
-        return redirect()->route('users');
+        DB::beginTransaction();
+        try {
+
+            $respMessage = ($user->is_active) ? 'User berhasil dinonaktifkan' : 'User berhasil diaktifkan kembali';
+            $user->is_active = !$user->is_active;
+            $user->save();
+            DB::commit();
+
+            return response()->json([
+                'message' => $respMessage,
+                'users' => User::with('role')->orderBy('id', 'DESC')->get()
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors([
+                'error' => $e
+            ]);
+        }
     }
 }

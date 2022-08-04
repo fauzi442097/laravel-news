@@ -1,6 +1,5 @@
 import Input from '@/Components/Input';
 import Label from '@/Components/Label';
-import Button from '@/Components/Button';
 
 const ModalForm = ({ errors, data, handleCloseModal, handleStore, handleChange, errorResponse }) => {
     return (
@@ -42,20 +41,6 @@ const ModalForm = ({ errors, data, handleCloseModal, handleStore, handleChange, 
                                 handleChange={handleChange}
                             />
                             {errors.name && <span className='text-sm text-red-500 mt-2'> {errors.name} </span>}
-                        </div>
-
-                        <div className="mt-4">
-                            <Label forInput="email" value="Email" />
-
-                            <Input
-                                type="email"
-                                name="email"
-                                value={data.email}
-                                className="mt-1 block w-full"
-                                autoComplete="off"
-                                handleChange={handleChange}
-                            />
-                            {errors.email && <span className='text-sm text-red-500 mt-2'> {errors.email} </span>}
                         </div>
 
                         <div className="flex items-center justify-end mt-4">
