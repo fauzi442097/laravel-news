@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
@@ -49,6 +50,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::delete('/roles/{role}', 'destroy')->name('roles.delete', ['role' => 'role']);
     });
 
+    Route::resource('posts', PostController::class);
 
 });
 

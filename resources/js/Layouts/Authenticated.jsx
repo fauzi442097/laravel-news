@@ -8,6 +8,8 @@ import { Link } from '@inertiajs/inertia-react';
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
+    console.log(auth);
+
     return (
         <div className="min-h-screen bg-white">
             <nav className="bg-white border-b-2 border-gray-100">
@@ -24,12 +26,29 @@ export default function Authenticated({ auth, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
-                                <NavLink href={route('users')} active={route().current('users')}>
-                                    User
-                                </NavLink>
-                                <NavLink href={route('roles')} active={route().current('roles')}>
-                                    Role
-                                </NavLink>
+                                {
+                                    auth.user.role_id == 1
+                                        ? (
+                                            <>
+                                                <NavLink href={route('users')} active={route().current('users')}>
+                                                    User
+                                                </NavLink>
+                                                <NavLink href={route('roles')} active={route().current('roles')}>
+                                                    Role
+                                                </NavLink>
+                                            </>
+                                        )
+                                        : (
+                                            <>
+                                                <NavLink href={route('posts.index')} active={route().current('posts.index')}>
+                                                    Posts
+                                                </NavLink>
+                                                <NavLink href={route('users')} active={route().current('users')}>
+                                                    Video
+                                                </NavLink>
+                                            </>
+                                        )
+                                }
                             </div>
                         </div>
 
@@ -100,12 +119,29 @@ export default function Authenticated({ auth, header, children }) {
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('users')} active={route().current('users')}>
-                            User
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('roles')} active={route().current('roles')}>
-                            Role
-                        </ResponsiveNavLink>
+                        {
+                            auth.user.role_id == 1
+                                ? (
+                                    <>
+                                        <ResponsiveNavLink href={route('users')} active={route().current('users')}>
+                                            User
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink href={route('roles')} active={route().current('roles')}>
+                                            Role
+                                        </ResponsiveNavLink>
+                                    </>
+                                )
+                                : (
+                                    <>
+                                        <ResponsiveNavLink href={route('posts.index')} active={route().current('posts.index')}>
+                                            Posts
+                                        </ResponsiveNavLink>
+                                        <ResponsiveNavLink href={route('roles')} active={route().current('roles')}>
+                                            Video
+                                        </ResponsiveNavLink>
+                                    </>
+                                )
+                        }
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
