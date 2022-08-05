@@ -23,6 +23,7 @@ export default (props) => {
     const [alertType, setAlertType] = useState("");
 
     useEffect(() => {
+        console.log(alertType);
         if (alertType == 'success') {
             setTitleAlert("Sukses");
             setBodyAlert("Data berhasil disimpan");
@@ -120,6 +121,42 @@ export default (props) => {
         setError({ ...error });
     }
 
+    const showAlertDelete = (user_id) => {
+        setTitleAlert("Delete role");
+        setBodyAlert("Anda yakin akan menghapus role ini?");
+        setButtonAlertName("Hapus");
+
+        setAlertType("confirm");
+        setShowModalAlert(true);
+        setUserIdSelected(user_id);
+    }
+
+    const deleteRole = async () => {
+        try {
+            setShowModalAlert(false);
+            let url = route('roles.delete', { id: userIdSelected });
+            let response = await axios.delete(url);
+
+            console.log(response);
+
+            if (response.data.code != 200) {
+                setAlertType("warning");
+                setTitleAlert("Warning");
+                setShowModalAlert(true);
+                setBodyAlert(response.data.message);
+            } else {
+                setAlertType("success");
+                setTitleAlert("Sukses");
+                setShowModalAlert(true);
+                setBodyAlert(response.data.message);
+                setRoles(response.data.roles);
+            }
+        } catch (errors) {
+            console.log('error');
+            console.log(errors.error);
+        }
+    }
+
     return (
         <Authenticated
             auth={props.auth}
@@ -146,6 +183,7 @@ export default (props) => {
                     title={titleAlert}
                     body={bodyAlert}
                     buttonName={buttonAlertName}
+                    handleAction={deleteRole}
                 />
             }
 
@@ -164,6 +202,7 @@ export default (props) => {
                         <div className="px-6 mt-6 pb-6">
                             <List roles={roles}
                                 handleShowModal={showModal}
+                                handleShowAlert={showAlertDelete}
                                 />
                         </div>
 

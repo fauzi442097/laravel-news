@@ -58,5 +58,34 @@ class RoleController extends Controller
         return response()->json(['role' => $role]);
     }
 
+    public function destroy(Role $role)
+    {
+        DB::beginTransaction();
+        try {
+
+            $totalUser = $role->loadCount('users')->users_count;
+            if ( $totalUser > 0 ) {
+                return response()->json([
+                    'code' => 300,
+                    'message' => "Role tidak dapat dihapus. \n Terdapat user yang menggunakannya"
+                ]);
+            }
+
+            $role->delete();
+            DB::commit();
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Role berhasil dihapus',
+                'roles' => Role::latest('id')->get()
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
 
 }

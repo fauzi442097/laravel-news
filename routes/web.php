@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/roles', 'store')->name('roles.store');
         Route::put('/roles/{role}', 'update')->name('roles.update');
         Route::get('/roles/{role}', 'show')->name('roles.show', ['role' => 'role']);
+        Route::delete('/roles/{role}', 'destroy')->name('roles.delete', ['role' => 'role']);
     });
 
 

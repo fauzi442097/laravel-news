@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import AlertModalConfirm from "./AlertModalConfirm";
 import AlertModalSuccess from "./AlertModalSuccess";
+import AlertModalWarning from "./AlertModalWarning";
 
 const AlertModal = ({typeAlert, showAlert, setShowAlert, id, title, body, handleAction, buttonName}) => {
 
@@ -39,6 +40,19 @@ const AlertModal = ({typeAlert, showAlert, setShowAlert, id, title, body, handle
                 <input type="checkbox" id="modal-alert" className="modal-toggle" />
                 <div className="modal">
                     <AlertModalSuccess
+                        body={body}
+                        title={title}
+                        closeModalAlert={closeModalAlert}
+                    />
+                </div>
+            </>
+        )
+    } else if (typeAlert == 'warning') {
+        return (
+            <>
+                <input type="checkbox" id="modal-alert" className="modal-toggle" />
+                <div className="modal">
+                    <AlertModalWarning
                         body={body}
                         title={title}
                         closeModalAlert={closeModalAlert}
