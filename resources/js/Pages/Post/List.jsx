@@ -5,10 +5,11 @@ const List = ({posts, handleRedirectPage, handleShowAlert}) => {
                 <tr>
                     <td className="py-4 text-center rounded-l-md font-semibold">No</td>
                     <td className="py-4 font-semibold">Judul</td>
+                    <td className="py-4 font-semibold">Kategori</td>
                     <td className="py-4 font-semibold">Tanggal Publish</td>
                     <td className="py-4 font-semibold">Tanggal Buat</td>
                     <td className="py-4 font-semibold">Author</td>
-                    <td className="py-4 font-semibold">Status</td>
+                    <td className="py-4 font-semibold text-center">Status</td>
                     <td className="py-4 font-semibold text-center rounded-r-md">Action</td>
                 </tr>
             </thead>
@@ -21,8 +22,9 @@ const List = ({posts, handleRedirectPage, handleShowAlert}) => {
                                     <tr key={index} className="hover:shadow-lg hover:rounded-xl row-table">
                                         <td className="border-b border-gray-100 text-center p-5">{++index}</td>
                                         <td className="border-b border-gray-100">{post.title}</td>
-                                        <td className="border-b border-gray-100 text-center">{new Date(post.published_at).toLocaleDateString()}</td>
-                                        <td className="border-b border-gray-100 text-center">{ new Date(post.created_at).toLocaleDateString()}</td>
+                                        <td className="border-b border-gray-100">{post.category.name}</td>
+                                        <td className="border-b border-gray-100">{new Date(post.published_at).toLocaleDateString()}</td>
+                                        <td className="border-b border-gray-100">{ new Date(post.created_at).toLocaleDateString()}</td>
                                         <td className="border-b border-gray-100">{post.user.name}</td>
                                         <td className="border-b border-gray-100 text-center">
                                             {

@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\Category;
+use App\Models\Tags;
 use Inertia\Inertia;
+use Auth;
+use DB;
 
 class PostController extends Controller
 {
@@ -18,9 +22,7 @@ class PostController extends Controller
     {
         //
 
-        // Post::factory(15)->create();
-
-        $param['posts'] = Post::latest('id')->with('user')->get();
+        $param['posts'] = Post::latest('id')->with(['user', 'category'])->get();
         return Inertia::render('Post/Index', $param);
     }
 
@@ -42,7 +44,50 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+
+            // Create or get category
+            $category = Category::whereRaw("LOWER(name) LIKE '%". strtolower($request->category_id)."%'")->first();
+            if ( is_null($category)) {
+                $category = Category::create(['name' => $request->category_id]);
+            }
+            $request->category_id = $category->id;
+
+            // Store Post
+            $post = Post::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'published_at' => date('Y-m-d'),
+                'is_active' => true,
+                'category_id' => $request->category_id,
+                'user_id' => Auth::user()->id
+            ]);
+
+            // store tags
+            $tags = explode(',', $request->tags);
+            foreach ( $tags as $tagName ) {
+                $tag = Tags::whereRaw("LOWER(name) LIKE '%". strtolower(trim($tagName))."%'")->first();
+                if ( is_null($tag)) {
+                    // store tags
+                    $tag = Tags::create([
+                        'name' => $tagName,
+                        'is_active' => 't',
+                        'user_id' => Auth::user()->id
+                    ]);
+                }
+
+                $post->tags()->save($tag);
+            }
+
+            DB::commit();
+            return redirect()->route('posts.index');
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            return redirect()->back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     /**

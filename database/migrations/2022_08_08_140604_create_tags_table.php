@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->date('published_at');
-            $table->bigInteger('category_id');
+            $table->string('name');
             $table->boolean('is_active');
             $table->bigInteger('user_id');
             $table->timestamps();
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('tags');
     }
 };

@@ -17,4 +17,20 @@ class Post extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(
+            Tags::class,
+            'taggable',
+            'taggables', // pivot table name
+            'taggable_id',
+            'tag_id'
+        );
+    }
 }
