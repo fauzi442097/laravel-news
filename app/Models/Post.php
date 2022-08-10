@@ -33,4 +33,9 @@ class Post extends Model
             'tag_id'
         );
     }
+
+    public function image()
+    {
+        return $this->morphOne(Imageable::class, 'imageable');
+    }
 }

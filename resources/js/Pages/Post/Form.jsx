@@ -14,13 +14,18 @@ export default (props) => {
         description: '',
         published_at: '',
         category_id: '',
-        tags: ''
+        tags: '',
+        thumbnail : null
     });
 
     const [showError, setShowError] = useState(false);
 
     const handleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+        if ( event.target.name == 'thumbnail' ) {
+            setData(event.target.name, event.target.files[0]);
+        } else {
+            setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+        }
     }
 
     const submit = (e) => {
@@ -157,7 +162,6 @@ export default (props) => {
                                             <Input
                                                 type='file'
                                                 name="thumbnail"
-                                                value={data.thumbnail}
                                                 className="mt-1 block w-full"
                                                 handleChange={handleChange}
                                             />

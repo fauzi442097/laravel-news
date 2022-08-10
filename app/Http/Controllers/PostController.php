@@ -10,6 +10,7 @@ use App\Models\Tags;
 use Inertia\Inertia;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -47,9 +48,12 @@ class PostController extends Controller
         DB::beginTransaction();
         try {
 
+
+
+
             // Create or get category
-            $category = Category::whereRaw("LOWER(name) LIKE '%". strtolower($request->category_id)."%'")->first();
-            if ( is_null($category)) {
+            $category = Category::whereRaw("LOWER(name) LIKE '%" . strtolower($request->category_id) . "%'")->first();
+            if (is_null($category)) {
                 $category = Category::create(['name' => $request->category_id]);
             }
             $request->category_id = $category->id;
@@ -64,11 +68,19 @@ class PostController extends Controller
                 'user_id' => Auth::user()->id
             ]);
 
+            if ($request->hasFile('thumbnail')) {
+                $file = $request->file('thumbnail');
+                $randomFileName = $file->hashName();
+                $extension = $file->extension();
+                $path = Storage::putFile('public', $file);
+                $post->image()->create(['url' => $path]);
+            }
+
             // store tags
             $tags = explode(',', $request->tags);
-            foreach ( $tags as $tagName ) {
-                $tag = Tags::whereRaw("LOWER(name) LIKE '%". strtolower(trim($tagName))."%'")->first();
-                if ( is_null($tag)) {
+            foreach ($tags as $tagName) {
+                $tag = Tags::whereRaw("LOWER(name) LIKE '%" . strtolower(trim($tagName)) . "%'")->first();
+                if (is_null($tag)) {
                     // store tags
                     $tag = Tags::create([
                         'name' => $tagName,
@@ -82,7 +94,7 @@ class PostController extends Controller
 
             DB::commit();
             return redirect()->route('posts.index');
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors([
                 'error' => $e->getMessage()
